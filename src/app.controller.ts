@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Render, Param, Delete, NotFoundException, BadRequestException } from '@nestjs/common';
 import { AppService } from './app.service.js';
 
 @Controller()
@@ -24,6 +24,14 @@ export class AppController {
   @Get('nevek/:id')
   getNev(@Param('id') id: string){
     const index = Number(id)
+
+    if(isNaN(index)){
+      throw new BadRequestException("Az index nem definiált(NaN)/Az id-nak számank kell lennie")
+    }
+
+    if(!this.nevek[index]){
+      throw new NotFoundException("Nincs ilyen nev")
+    }
 
     return this.nevek[index]
   }
